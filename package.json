@@ -10,7 +10,7 @@
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",
     "serve": "concurrently -i 'npm:serve-*'",
-    "serve:ace": "nx serve ace",
+    "serve:ace": "PORT=3000 nx serve ace",
     "serve:progress-board": "nx serve progress-board",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
