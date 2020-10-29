@@ -1,0 +1,45 @@
+{
+    "key": "hello-world",
+    "name": "Nx Workspace for Jira",
+    "description": "This is just a tribute...",
+    "vendor": {
+        "name": "Milo Kang",
+        "url": "milowebmaster@gmail.com"
+    },
+    "baseUrl": "{{localBaseUrl}}",
+    "links": {
+        "self": "{{localBaseUrl}}/atlassian-connect.json",
+        "homepage": "{{localBaseUrl}}/atlassian-connect.json"
+    },
+    "authentication": {
+        "type": "jwt"
+    },
+    "lifecycle": {
+        "installed": "/installed"
+    },
+    "scopes": [
+        "READ"
+    ],
+    "modules": {
+        "generalPages": [
+            {
+                "key": "documentation",
+                "url": "/documentation",
+                "name": {
+                    "value": "Atlassian + Nx Workspace Documentation"
+                }
+            }
+        ],
+        "jiraProjectPages": [
+            {
+                "key": "board",
+                "name": {
+                    "value": "Sample Board"
+                },
+                "url": "/sample-board?projectKey=${project.key}",
+                "iconUrl": "/images/icon.svg",
+                "weight": 1
+            }
+        ]
+    }
+}
