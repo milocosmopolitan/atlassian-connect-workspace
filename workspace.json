@@ -1,222 +1,120 @@
 {
   "version": 1,
   "projects": {
-    "progress-board": {
-      "root": "apps/progress-board",
-      "sourceRoot": "apps/progress-board/src",
+    "ac-next-add-on": {
+      "root": "apps/ac-next-add-on",
+      "sourceRoot": "apps/ac-next-add-on",
       "projectType": "application",
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@nrwl/web:build",
+          "builder": "@nrwl/next:build",
           "options": {
-            "outputPath": "dist/apps/progress-board",
-            "index": "apps/progress-board/src/index.html",
-            "main": "apps/progress-board/src/main.tsx",
-            "polyfills": "apps/progress-board/src/polyfills.ts",
-            "tsConfig": "apps/progress-board/tsconfig.app.json",
-            "assets": [
-              "apps/progress-board/src/favicon.ico",
-              "apps/progress-board/src/assets"
-            ],
-            "styles": [],
-            "scripts": [],
-            "webpackConfig": "@nrwl/react/plugins/webpack"
+            "root": "apps/ac-next-add-on",
+            "outputPath": "dist/apps/ac-next-add-on"
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/progress-board/src/environments/environment.ts",
-                  "with": "apps/progress-board/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "replace": "dist/apps/ac-next-add-on/exported/public/atlassian-connect.json",
+                  "with": "apps/ac-next-add-on/environments/atlassian-connect.prod.json"
                 }
               ]
             }
           }
         },
         "serve": {
-          "builder": "@nrwl/web:dev-server",
+          "builder": "@nrwl/next:server",
           "options": {
-            "buildTarget": "progress-board:build",
-            "proxyConfig": "apps/progress-board/proxy.conf.json"
+            "buildTarget": "ac-next-add-on:build",
+            "dev": true,
+            "port": 3000
           },
           "configurations": {
             "production": {
-              "buildTarget": "progress-board:build:production"
+              "buildTarget": "ac-next-add-on:build:production",
+              "dev": false
             }
+          }
+        },
+        "export": {
+          "builder": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "ac-next-add-on:build:production"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/progress-board/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": ["apps/ac-next-add-on/**/*.{ts,tsx}"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/progress-board/jest.config.js",
+            "jestConfig": "apps/ac-next-add-on/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "echo": {
+          "builder": "./tools/builders/echo:echo",
+          "options": {
+            "textToEcho": "Hello World"
+          }
+        },
+        "dev": {
+          "builder": "./tools/builders/dev:dev",
+          "options": {
+            "buildTarget": "ac-next-add-on:build",
+            "dev": true,
+            "port": 3000
           }
         }
       }
     },
-    "progress-board-e2e": {
-      "root": "apps/progress-board-e2e",
-      "sourceRoot": "apps/progress-board-e2e/src",
+    "ac-next-add-on-e2e": {
+      "root": "apps/ac-next-add-on-e2e",
+      "sourceRoot": "apps/ac-next-add-on-e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/progress-board-e2e/cypress.json",
-            "tsConfig": "apps/progress-board-e2e/tsconfig.e2e.json",
-            "devServerTarget": "progress-board:serve"
+            "cypressConfig": "apps/ac-next-add-on-e2e/cypress.json",
+            "tsConfig": "apps/ac-next-add-on-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ac-next-add-on:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "progress-board:serve:production"
+              "devServerTarget": "ac-next-add-on:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/progress-board-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": ["apps/ac-next-add-on-e2e/**/*.{js,ts}"]
           }
         }
       }
     },
-    "api": {
-      "root": "apps/api",
-      "sourceRoot": "apps/api/src",
-      "projectType": "application",
-      "prefix": "api",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/api",
-            "main": "apps/api/src/main.ts",
-            "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/api/src/environments/environment.ts",
-                  "with": "apps/api/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "api:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/api/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/api/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "api-interfaces": {
-      "root": "libs/api-interfaces",
-      "sourceRoot": "libs/api-interfaces/src",
+    "atlassian-connect-dev-tool": {
+      "root": "libs/atlassian-connect/dev-tool",
+      "sourceRoot": "libs/atlassian-connect/dev-tool/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api-interfaces/**/*.ts"]
+            "lintFilePatterns": ["libs/atlassian-connect/dev-tool/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/api-interfaces/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "ace": {
-      "root": "apps/ace",
-      "sourceRoot": "apps/ace/src",
-      "projectType": "application",
-      "prefix": "ace",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/ace",
-            "main": "apps/ace/src/main.ts",
-            "tsConfig": "apps/ace/tsconfig.app.json",
-            "assets": ["apps/ace/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/ace/src/environments/environment.ts",
-                  "with": "apps/ace/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "ace:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/ace/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/ace/jest.config.js",
+            "jestConfig": "libs/atlassian-connect/dev-tool/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -224,7 +122,7 @@
     }
   },
   "cli": {
-    "defaultCollection": "@nrwl/react"
+    "defaultCollection": "@nrwl/next"
   },
   "schematics": {
     "@nrwl/react": {
@@ -240,7 +138,13 @@
         "style": "styled-components",
         "linter": "eslint"
       }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "styled-components",
+        "linter": "eslint"
+      }
     }
   },
-  "defaultProject": "progress-board"
+  "defaultProject": "ac-next-add-on"
 }

@@ -1,0 +1,37 @@
+{
+    "key": "ac-next-add-on-rc",
+    "name": "NextJS Static Plugin - Hello World (RC)",
+    "description": "starter",
+    "vendor": {
+        "name": "Milo Kang",
+        "url": "milowebmaster@gmail.com"
+    },
+    "baseUrl": "https://localhost:3000",
+    "authentication": {
+        "type": "none"
+    },
+    "enableLicensing": false,
+    "lifecycle": {
+    },
+    "modules": {
+        "jiraDashboardItems": [
+            {
+                "name" : {
+                    "value" : "Hello Dashboad Gadget JIRA Cloud"
+                },
+                "url" : "/hello-world",
+                "key" : "hello-world",
+                "description" : {
+                    "value" : "Hello world gadget"
+                },
+
+                "thumbnailUrl": "/thumbnail.png",
+                "configurable" : true
+            }
+        ]
+    },
+    "scopes": ["READ", "WRITE"],
+    "apiMigrations": {
+        "gdpr": false
+    }
+}

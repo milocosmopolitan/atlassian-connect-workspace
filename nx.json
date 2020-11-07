@@ -23,20 +23,14 @@
     }
   },
   "projects": {
-    "progress-board": {
+    "ac-next-add-on": {
       "tags": []
     },
-    "progress-board-e2e": {
+    "ac-next-add-on-e2e": {
       "tags": [],
-      "implicitDependencies": ["progress-board"]
+      "implicitDependencies": ["ac-next-add-on"]
     },
-    "api": {
-      "tags": []
-    },
-    "api-interfaces": {
-      "tags": []
-    },
-    "ace": {
+    "atlassian-connect-dev-tool": {
       "tags": []
     }
   }

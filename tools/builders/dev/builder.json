@@ -1,0 +1,9 @@
+{
+  "builders": {
+    "dev": {
+      "implementation": "./server.impl",
+      "schema": "./schema.json",
+      "description": "Runs Atlassian Connect App in Development Server"
+    }
+  }
+}
