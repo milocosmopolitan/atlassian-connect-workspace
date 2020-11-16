@@ -9,8 +9,10 @@ const path = require("path");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const config_1 = require("./lib/utils/config");
-const custom_server_1 = require("./lib/custom-server");
 const default_server_1 = require("./lib/default-server");
+// import * as JsonPostProcessPlugin from 'json-post-process-webpack-plugin';
+// import { json } from '@angular-devkit/core';
+// interface Options extends json.JsonObject, NextServeBuilderOptions {}
 try {
     require('dotenv').config();
 }
@@ -34,9 +36,12 @@ function run(options, context) {
             path: options.customServerPath,
             hostname: options.hostname,
         };
-        const server = options.customServerPath
-            ? custom_server_1.customServer
-            : default_server_1.defaultServer;
+        context.logger.info(`options.hostname: ${options.hostname}`, options);
+        context.logger.info(`options.port: ${options.port}`, options);
+        // const server: NextServer = options.customServerPath
+        //   ? customServer
+        //   : defaultServer;
+        const server = default_server_1.aceServer;
         // look for the proxy.conf.json
         let proxyConfig;
         const proxyConfigPath = options.proxyConfig
@@ -46,8 +51,41 @@ function run(options, context) {
             context.logger.info(`${infoPrefix} found proxy configuration at ${proxyConfigPath}`);
             proxyConfig = require(proxyConfigPath);
         }
-        return rxjs_1.from(server(settings, proxyConfig)).pipe(operators_1.catchError((err) => {
+        context.logger.info('RUN RXJS');
+        context.logger.info(Object.keys(settings).join());
+        return rxjs_1.from(server(settings, context.logger, proxyConfig)
+        // .then(() => {
+        //   const acConfigPath = path.resolve(process.cwd(), buildOptions.outputPath, 'public', 'atlassian-connect.json');
+        //   const acConfigFile = fs.readFileSync(acConfigPath, {encoding: 'utf-8'});
+        //   const acConfig = JSON.parse(acConfigFile);
+        //   acConfig.baseUrl = tunnel;
+        //   fs.writeFileSync(acConfigPath, JSON.stringify(acConfig, null, 2));
+        //   context.logger.info(`${infoPrefix} baseUrl to ngrok tunnel uri ${tunnel} at ${acConfigPath.replace(process.cwd(), '.')}`);
+        // });
+        // 
+        // createTunnel(settings, context.logger)
+        //   .then(tunnel => {
+        //     context.logger.info(`tunnel: ${tunnel}`);
+        //     settings.conf = prepareConfig(
+        //       options.dev ? PHASE_DEVELOPMENT_SERVER : PHASE_PRODUCTION_SERVER,
+        //       buildOptions,
+        //       context
+        //     );
+        //     return server(settings, context.logger, proxyConfig)
+        //       .then(() => {
+        //         const acConfigPath = path.resolve(process.cwd(), buildOptions.outputPath, 'public', 'atlassian-connect.json');
+        //         const acConfigFile = fs.readFileSync(acConfigPath, {encoding: 'utf-8'});
+        //         const acConfig = JSON.parse(acConfigFile);
+        //         acConfig.baseUrl = tunnel;
+        //         fs.writeFileSync(acConfigPath, JSON.stringify(acConfig, null, 2));
+        //         context.logger.info(`${infoPrefix} baseUrl to ngrok tunnel uri ${tunnel} at ${acConfigPath.replace(process.cwd(), '.')}`);
+        //       });
+        //   })
+        //   .catch(console.error)
+        // defaultServer(settings, proxyConfig)
+        ).pipe(operators_1.catchError((err) => {
             if (options.dev) {
+                context.logger.info('DEV ERROR');
                 throw err;
             }
             else {

@@ -7,7 +7,8 @@ const config_1 = require("next/dist/next-server/server/config");
 const path_1 = require("path");
 const tsconfig_paths_webpack_plugin_1 = require("tsconfig-paths-webpack-plugin");
 const config_2 = require("@nrwl/web/src/utils/config");
-function createWebpackConfig(workspaceRoot, projectRoot, fileReplacements = []) {
+const JsonPostProcessPlugin = require("json-post-process-webpack-plugin");
+function createWebpackConfig(workspaceRoot, projectRoot, fileReplacements = [], tunnelUri) {
     return function webpackConfig(config, { defaultLoaders }) {
         const mainFields = ['es2015', 'module', 'main'];
         const extensions = ['.ts', '.tsx', '.mjs', '.js', '.jsx'];
@@ -72,11 +73,19 @@ function createWebpackConfig(workspaceRoot, projectRoot, fileReplacements = []) 
                 glob: '**/*',
             },
         ]));
+        if (tunnelUri) {
+            config.plugins.push(new JsonPostProcessPlugin({
+                matchers: [{
+                        matcher: /^atlassian-connect.json$/,
+                        action: (currentJsonContent) => (Object.assign(Object.assign({}, currentJsonContent), { baseUrl: tunnelUri }))
+                    }]
+            }));
+        }
         return config;
     };
 }
 exports.createWebpackConfig = createWebpackConfig;
-function prepareConfig(phase, options, context) {
+function prepareConfig(phase, options, context, tunnelUri) {
     const config = config_1.default(phase, options.root, null);
     const userWebpack = config.webpack;
     const userNextConfig = options.nextConfig
@@ -85,7 +94,7 @@ function prepareConfig(phase, options, context) {
     // Yes, these do have different capitalisation...
     config.outdir = `${workspace_1.offsetFromRoot(options.root)}${options.outputPath}`;
     config.distDir = path_1.join(config.outdir, '.next');
-    config.webpack = (a, b) => createWebpackConfig(context.workspaceRoot, options.root, options.fileReplacements)(userWebpack ? userWebpack(a, b) : a, b);
+    config.webpack = (a, b) => createWebpackConfig(context.workspaceRoot, options.root, options.fileReplacements, tunnelUri)(userWebpack ? userWebpack(a, b) : a, b);
     return userNextConfig(phase, config, { options });
 }
 exports.prepareConfig = prepareConfig;

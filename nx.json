@@ -23,14 +23,14 @@
     }
   },
   "projects": {
-    "ac-next-add-on": {
+    "filter-lint-gadget": {
       "tags": []
     },
-    "ac-next-add-on-e2e": {
+    "filter-lint-gadget-e2e": {
       "tags": [],
-      "implicitDependencies": ["ac-next-add-on"]
+      "implicitDependencies": ["filter-lint-gadget"]
     },
-    "atlassian-connect-dev-tool": {
+    "filter-lint": {
       "tags": []
     }
   }

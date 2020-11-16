@@ -1,45 +1,49 @@
 {
-    "key": "hello-world",
-    "name": "Nx Workspace for Jira",
-    "description": "This is just a tribute...",
+    "key": "ac-next-add-on-rc",
+    "name": "NextJS Static Plugin - Hello World (RC)",
+    "description": "starter",
     "vendor": {
         "name": "Milo Kang",
         "url": "milowebmaster@gmail.com"
     },
     "baseUrl": "{{localBaseUrl}}",
     "links": {
-        "self": "{{localBaseUrl}}/atlassian-connect.json",
-        "homepage": "{{localBaseUrl}}/atlassian-connect.json"
+        "self": "{{localBaseUrl}}atlassian-connect.json",
+        "homepage": "{{localBaseUrl}}atlassian-connect.json"
     },
     "authentication": {
-        "type": "jwt"
+        "type": "none"
     },
+    "enableLicensing": false,
     "lifecycle": {
-        "installed": "/installed"
     },
-    "scopes": [
-        "READ"
-    ],
     "modules": {
         "generalPages": [
             {
-                "key": "documentation",
-                "url": "/documentation",
+                "url" : "/filter-lint-gadget/index.html",
                 "name": {
-                    "value": "Atlassian + Nx Workspace Documentation"
-                }
+                    "value": "RC: My General Page"
+                },
+                "key": "my-general-page"
             }
         ],
-        "jiraProjectPages": [
+        "jiraDashboardItems": [
             {
-                "key": "board",
-                "name": {
-                    "value": "Sample Board"
+                "name" : {
+                  "value" : "RC: Filter Status"
                 },
-                "url": "/sample-board?projectKey=${project.key}",
-                "iconUrl": "/images/icon.svg",
-                "weight": 1
-            }
+                "url" : "/filter-lint-gadget/index.html?dashboardItemId={dashboardItem.id}&dashboardId={dashboard.id}&view={dashboardItem.viewType}",
+                "key" : "filter-lint-gadget",
+                "description" : {
+                  "value" : "Filter Lint Gadget"
+                },
+                "thumbnailUrl": "/images/thumbnail.png",
+                "configurable" : true
+              }
         ]
+    },
+    "scopes": ["READ", "WRITE"],
+    "apiMigrations": {
+        "gdpr": false
     }
 }

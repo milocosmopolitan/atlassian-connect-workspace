@@ -13,11 +13,13 @@ import { Configuration } from 'webpack';
 import { FileReplacement, NextBuildBuilderOptions } from '@nrwl/next';
 import { BuilderContext } from '@angular-devkit/architect';
 import { createCopyPlugin } from '@nrwl/web/src/utils/config';
+import * as JsonPostProcessPlugin from 'json-post-process-webpack-plugin';
 
 export function createWebpackConfig(
   workspaceRoot: string,
   projectRoot: string,
-  fileReplacements: FileReplacement[] = []
+  fileReplacements: FileReplacement[] = [],
+  tunnelUri?: string
 ): (a, b) => Configuration {
   return function webpackConfig(
     config: Configuration,
@@ -95,6 +97,19 @@ export function createWebpackConfig(
       ])
     );
 
+    if (tunnelUri) {
+      config.plugins.push(new JsonPostProcessPlugin({
+        matchers: [{
+          matcher: /^atlassian-connect.json$/,
+          action: (currentJsonContent) => ({
+            ...currentJsonContent,
+            baseUrl: tunnelUri
+          })
+        }]
+      }));
+    }
+    
+
     return config;
   };
 }
@@ -106,7 +121,8 @@ export function prepareConfig(
     | typeof PHASE_DEVELOPMENT_SERVER
     | typeof PHASE_PRODUCTION_SERVER,
   options: NextBuildBuilderOptions,
-  context: BuilderContext
+  context: BuilderContext,
+  tunnelUri?: string,
 ) {
   const config = loadConfig(phase, options.root, null);
   const userWebpack = config.webpack;
@@ -120,7 +136,8 @@ export function prepareConfig(
     createWebpackConfig(
       context.workspaceRoot,
       options.root,
-      options.fileReplacements
+      options.fileReplacements,
+      tunnelUri
     )(userWebpack ? userWebpack(a, b) : a, b);
   return userNextConfig(phase, config, { options });
 }

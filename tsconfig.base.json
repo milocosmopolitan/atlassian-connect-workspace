@@ -16,9 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@atlassian-connect/dev-tool": [
-        "libs/atlassian-connect/dev-tool/src/index.ts"
-      ]
+      
     }
   },
   "exclude": ["node_modules", "tmp"]

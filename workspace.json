@@ -1,121 +1,160 @@
 {
   "version": 1,
   "projects": {
-    "ac-next-add-on": {
-      "root": "apps/ac-next-add-on",
-      "sourceRoot": "apps/ac-next-add-on",
+    "filter-lint": {
+      "root": "apps/filter-lint",
+      "sourceRoot": "apps/filter-lint/src",
+      "projectType": "application",
+      "prefix": "filter-lint",
+      "schematics": {},
+      "architect": {
+        "serve": {
+          "builder": "@nrwl/workspace:run-commands",
+            "options": {
+            "commands": [
+              { "command": "nx build filter-lint-gadget --baseHref '/filter-lint-gadget/'" },
+              { "command": "nx run filter-lint:run-server" }
+            ]
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/filter-lint",
+            "main": "apps/filter-lint/src/main.ts",
+            "tsConfig": "apps/filter-lint/tsconfig.app.json",
+            "assets": ["apps/filter-lint/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/filter-lint/src/environments/environment.ts",
+                  "with": "apps/filter-lint/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "run-server": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "filter-lint:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/filter-lint/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/filter-lint/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "filter-lint-gadget": {
+      "root": "apps/filter-lint-gadget",
+      "sourceRoot": "apps/filter-lint-gadget/src",
       "projectType": "application",
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@nrwl/next:build",
+          "builder": "@nrwl/web:build",
           "options": {
-            "root": "apps/ac-next-add-on",
-            "outputPath": "dist/apps/ac-next-add-on"
+            "outputPath": "dist/apps/filter-lint/public/filter-lint-gadget",
+            "index": "apps/filter-lint-gadget/src/index.html",
+            "main": "apps/filter-lint-gadget/src/main.tsx",
+            "polyfills": "apps/filter-lint-gadget/src/polyfills.ts",
+            "tsConfig": "apps/filter-lint-gadget/tsconfig.app.json",
+            "assets": [
+              "apps/filter-lint-gadget/src/assets"
+            ],
+            "styles": [],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack",
+            "watch": true
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "dist/apps/ac-next-add-on/exported/public/atlassian-connect.json",
-                  "with": "apps/ac-next-add-on/environments/atlassian-connect.prod.json"
+                  "replace": "apps/filter-lint-gadget/src/environments/environment.ts",
+                  "with": "apps/filter-lint-gadget/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 }
               ]
             }
           }
         },
         "serve": {
-          "builder": "@nrwl/next:server",
+          "builder": "@nrwl/web:dev-server",
           "options": {
-            "buildTarget": "ac-next-add-on:build",
-            "dev": true,
-            "port": 3000
+            "buildTarget": "filter-lint-gadget:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "ac-next-add-on:build:production",
-              "dev": false
+              "buildTarget": "filter-lint-gadget:build:production"
             }
-          }
-        },
-        "export": {
-          "builder": "@nrwl/next:export",
-          "options": {
-            "buildTarget": "ac-next-add-on:build:production"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/ac-next-add-on/**/*.{ts,tsx}"]
+            "lintFilePatterns": ["apps/filter-lint-gadget/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/ac-next-add-on/jest.config.js",
+            "jestConfig": "apps/filter-lint-gadget/jest.config.js",
             "passWithNoTests": true
-          }
-        },
-        "echo": {
-          "builder": "./tools/builders/echo:echo",
-          "options": {
-            "textToEcho": "Hello World"
-          }
-        },
-        "dev": {
-          "builder": "./tools/builders/dev:dev",
-          "options": {
-            "buildTarget": "ac-next-add-on:build",
-            "dev": true,
-            "port": 3000
           }
         }
       }
     },
-    "ac-next-add-on-e2e": {
-      "root": "apps/ac-next-add-on-e2e",
-      "sourceRoot": "apps/ac-next-add-on-e2e/src",
+    "filter-lint-gadget-e2e": {
+      "root": "apps/filter-lint-gadget-e2e",
+      "sourceRoot": "apps/filter-lint-gadget-e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/ac-next-add-on-e2e/cypress.json",
-            "tsConfig": "apps/ac-next-add-on-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ac-next-add-on:serve"
+            "cypressConfig": "apps/filter-lint-gadget-e2e/cypress.json",
+            "tsConfig": "apps/filter-lint-gadget-e2e/tsconfig.e2e.json",
+            "devServerTarget": "filter-lint-gadget:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ac-next-add-on:serve:production"
+              "devServerTarget": "filter-lint-gadget:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/ac-next-add-on-e2e/**/*.{js,ts}"]
-          }
-        }
-      }
-    },
-    "atlassian-connect-dev-tool": {
-      "root": "libs/atlassian-connect/dev-tool",
-      "sourceRoot": "libs/atlassian-connect/dev-tool/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/atlassian-connect/dev-tool/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/atlassian-connect/dev-tool/jest.config.js",
-            "passWithNoTests": true
+            "lintFilePatterns": ["apps/filter-lint-gadget-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -146,5 +185,5 @@
       }
     }
   },
-  "defaultProject": "ac-next-add-on"
+  "defaultProject": "filter-lint"
 }
